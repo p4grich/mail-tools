@@ -51,6 +51,18 @@ if args.email:
         else:
            print("--- no invalid emails ---")
 
+        response = sg.client.suppression.spam_reports._(email).get()
+        #print(response.status_code)
+        #print(response.body)
+        #print(response.headers)
+        parsed = json.loads(response.body)
+        if parsed:
+            print("--- End user has flagged your email as spam ---")
+            print(json.dumps(parsed, indent=2, sort_keys=True))
+            print("--- End user has flagged your email as spam  ---")
+        else:
+            print("--- no spam reports ---")
+
     except exceptions.BadRequestsError as e:
         print(e.body)
         exit()
@@ -83,3 +95,10 @@ if args.delete:
     except exceptions.NotFoundError as e:
         print("delete_bounces:", e.body)
 
+    try:
+        response = sg.client.suppression.spam_reports._(email).delete()
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except exceptions.NotFoundError as e:
+        print("delete_spam_report:", e.body)
