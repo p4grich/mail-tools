@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import json
 import os
@@ -57,9 +58,9 @@ if args.email:
         #print(response.headers)
         parsed = json.loads(response.body)
         if parsed:
-            print("--- End user has flagged your email as spam ---")
+            print("--- Enduser flagged HTH email as spam ---")
             print(json.dumps(parsed, indent=2, sort_keys=True))
-            print("--- End user has flagged your email as spam  ---")
+            print("--- Enduser flagged HTH email as spam  ---")
         else:
             print("--- no spam reports ---")
 
