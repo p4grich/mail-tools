@@ -6,11 +6,32 @@ import sendgrid
 from python_http_client import exceptions
 
 parser = argparse.ArgumentParser()
+parser.add_argument("-l", "--list", action="store_true", help="list all by category")
 parser.add_argument("-e", "--email", type=str, help="email address")
 parser.add_argument("-d", "--delete", type=str, help="delete email from sendgrid")
 args = parser.parse_args()
 
 sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
+
+if args.list:
+    try:
+        #params = {'start_time': 1, 'limit': 100, 'end_time': 1, 'offset': 0}
+        params = {}
+        response = sg.client.suppression.invalid_emails.get(query_params=params)
+        #print(response.status_code)
+        #print(response.body)
+        #print(response.headers)
+        parsed = json.loads(response.body)
+        if parsed:
+            print("--- list all invalid emails ---")
+            print(json.dumps(parsed, indent=2, sort_keys=True))
+            print("--- list all invalid emails ---")
+        else:
+            print("--- no invalid emails ---")
+
+    except exceptions.BadRequestsError as e:
+        print(e.body)
+        exit()
 
 if args.email:
     email = args.email
